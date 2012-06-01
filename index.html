@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-en"> 
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Canworks</title>
+	<script type="text/javascript" src="canworks/Canworks.js"></script>
+</head>
+<body>
+	
+	
+	
+	<p> <img src="canworks/canworks.png"> <a href="javascript:Canworks.Renderer.startRendering();">Start Rendering</a> <a href="javascript:Canworks.Renderer.stopRendering();">Stop Rendering</a> <span id="fps">0 fps</span> <span id="ms">0 ms</span></p>
+	
+	<script type="text/javascript">
+		
+		// faster namespace typing ;)
+		var CW = Canworks;
+		
+		var myImage = new CW.Image();
+		myImage.setURL('test_image.jpg');
+		myImage.load();
+		
+		CW.Renderer.setShowFPS(true, document.getElementById("fps"), document.getElementById("ms"));
+		CW.Renderer.setSublayerAlphaBlendingEnabled(true); // better for UI, slower performance
+		
+		var myNewSurface = new CW.Surface(document.body, new CW.Rect(0, 0, 800, 800));
+		myNewSurface.getCanvasElement().style.backgroundColor = "grey";
+		
+		var myNewView = new CW.Layer(new CW.Rect(100, 100, 100, 100));
+		myNewView.setBackgroundColor("rgba(125, 40, 80, 1.0);");
+		myNewView.setAlpha(0.25);
+		myNewView.setUserInteractionEnabled(true);
+		myNewView.setCornerRadius(16);
+		
+		var myNewView4 = new CW.Layer(new CW.Rect(200, 300, 75, 75));
+		myNewView4.setBackgroundColor("green");
+		myNewView4.setUserInteractionEnabled(true);
+		
+		var myNewView4BGImage = new Image();
+		myNewView4BGImage.onload = function() {
+			var context = Canworks.getCurrentGraphicsContext(myNewView4);
+    		var pattern = context.createPattern(myNewView4BGImage, 'no-repeat');
+    		myNewView4.setBackgroundColor(pattern);
+		};
+		myNewView4BGImage.src = 'test_image.jpg';
+		
+		var myNewView5 = new CW.Layer(new CW.Rect(5, 5, 20, 20));
+		myNewView5.setBackgroundColor("red");
+		myNewView5.setAutoresizingMask(Canworks.layerAutoresizing.flexibleRightMargin | Canworks.layerAutoresizing.flexibleBottomMargin);
+		myNewView5.setOpaque(true);
+		
+		var myNewView6 = new CW.Layer(new CW.Rect(10, 35, 50, 10));
+		myNewView6.setBackgroundColor("yellow");
+		myNewView6.setAutoresizingMask(Canworks.layerAutoresizing.flexibleRightMargin | Canworks.layerAutoresizing.flexibleLeftMargin | Canworks.layerAutoresizing.flexibleWidth);
+		myNewView6.setOpaque(true);
+		
+		var myNewView7 = new CW.Layer(new CW.Rect(50, 50, 20, 20));
+		myNewView7.setBackgroundColor("blue");
+		myNewView7.setAutoresizingMask(Canworks.layerAutoresizing.flexibleLeftMargin | Canworks.layerAutoresizing.flexibleTopMargin);
+		myNewView7.setOpaque(true);
+		
+		var myNewView8 = new CW.Layer(new CW.Rect(25, 25, 20, 20));
+		myNewView8.setBackgroundColor("red");
+		myNewView8.setOpaque(true);
+		myNewView8.setUserInteractionEnabled(true);
+		
+		myNewView4.addSublayer(myNewView5);
+		myNewView4.addSublayer(myNewView6);
+		myNewView4.addSublayer(myNewView7);
+		
+		var myNewView2 = new CW.Layer(new CW.Rect(10, 10, 30, 30));
+		myNewView2.setBackgroundColor("red");
+		myNewView2.setAlpha(0.5);
+		myNewView2.setUserInteractionEnabled(true);
+		
+		var myNewView3 = new CW.Layer(new CW.Rect(25, 25, 50, 50));
+		myNewView3.setBackgroundColor("yellow");
+		myNewView3.setUserInteractionEnabled(true);
+		myNewView3.addSublayer(myNewView8);
+		myNewView3.setBorderWidth(2);
+		
+		myNewView.addSublayer(myNewView2);
+		myNewView.addSublayer(myNewView3);
+		
+		myNewView.sendSublayerToBack(myNewView3);
+		
+		myNewView.bringSublayerToFront(myNewView3);
+		
+		myNewView.exchangeSublayerAtIndexWithSublayerAtIndex(0,1);
+		
+		myNewSurface.addSublayer(myNewView);
+		
+		var myNewView11 = new CW.Layer(new CW.Rect(600, 600, 50, 50));
+		myNewView11.setBackgroundColor("blue");
+		myNewSurface.addSublayer(myNewView11);
+		
+		myNewSurface.addSublayer(myNewView4);
+		
+		var myNewView9 = new CW.Layer(new CW.Rect(400, 200, 100, 100));
+		myNewView9.setBackgroundColor("red");
+		myNewView9.setCornerRadius(16);
+		myNewView9.setShadowOffset(new CW.Point(2,2));
+		myNewView9.setShadowBlur(4);
+		myNewView9.setUserInteractionEnabled(true);
+		myNewSurface.addSublayer(myNewView9);
+		
+		var myNewView10 = new CW.Layer(new CW.Rect(443, 243, 138, 14));
+		myNewView10.setBackgroundColor("green");
+		myNewSurface.addSublayer(myNewView10);
+		
+		var myNewView12 = new CW.Layer(new CW.Rect(613, 607, 50, 50));
+		myNewView12.setBackgroundColor("pink");
+		myNewSurface.addSublayer(myNewView12);
+		
+		myNewView9.interactionPointerOver = function(point, event) { this.setBorderWidth(2); };
+		myNewView9.interactionPointerOut = function(point, event) { this.setBorderWidth(0); };
+		
+		myNewView8.interactionPointerDown = function(point, event) { console.log(this.getFrameInSurface().toString()); };
+		myNewView8.interactionPointerUp = function(point, event) { };
+		myNewView8.interactionPointerMove = function(point, event) { };
+		myNewView8.interactionPointerDrag = function(point, event) { };
+		myNewView8.interactionPointerOver = function(point, event) { };
+		myNewView8.interactionPointerOut = function(point, event) { };
+		
+		myNewView3.interactionPointerDown = function(point, event) { this.setBackgroundColor('blue'); console.log(this.getPositionInSurface().toString()); };
+		myNewView3.interactionPointerUp = function(point, event) { this.setBackgroundColor('yellow'); };
+		myNewView3.interactionPointerMove = function(point, event) { };
+		myNewView3.interactionPointerDrag = function(point, event) { };
+		myNewView3.interactionPointerOver = function(point, event) { this.setAlpha(0.5); };
+		myNewView3.interactionPointerOut = function(point, event) { this.setAlpha(1.0); };
+		
+		myNewView4.interactionPointerDown = function(point, event) { console.log(this.getPositionInSurface().toString()); };
+		myNewView4.interactionPointerUp = function(point, event) {  };
+		myNewView4.interactionPointerMove = function(point, event) { };
+		myNewView4.interactionPointerDrag = function(point, event) { };
+		myNewView4.interactionPointerOver = function(point, event) { this.setBounds(new CW.Rect(0, 0, 433, 443)); };
+		myNewView4.interactionPointerOut = function(point, event) { this.setBounds(new CW.Rect(0, 0, 75, 75)); };
+		
+		myNewView2.interactionPointerDown = function(point, event) { this.setBackgroundColor('blue'); console.log(this.getPositionInSurface().toString()); };
+		myNewView2.interactionPointerUp = function(point, event) { this.setBackgroundColor('red'); };
+		myNewView2.interactionPointerMove = function(point, event) { };
+		myNewView2.interactionPointerDrag = function(point, event) { };
+		myNewView2.interactionPointerOver = function(point, event) { this.setAlpha(0.5); };
+		myNewView2.interactionPointerOut = function(point, event) { this.setAlpha(1.0); };
+		
+		myNewView.interactionPointerDown = function(point, event) { this.setBackgroundColor('blue'); console.log(this.getPositionInSurface().toString()); };
+		myNewView.interactionPointerUp = function(point, event) { this.setBackgroundColor('rgba(125, 40, 80, 1.0);'); };
+		myNewView.interactionPointerMove = function(point, event) { };
+		myNewView.interactionPointerDrag = function(point, event) { };
+		myNewView.interactionPointerOver = function(point, event) { this.setAlpha(0.5); };
+		myNewView.interactionPointerOut = function(point, event) { this.setAlpha(1.0); };
+		
+	</script>
+
+</body>
+</html>

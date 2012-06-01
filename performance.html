@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-en"> 
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Canworks</title>
+	<script type="text/javascript" src="canworks/Canworks.js"></script>
+</head>
+<body>
+	
+	
+	
+	<p> <img src="canworks/canworks.png"> <a href="javascript:Canworks.Renderer.startRendering();startAnimation();">Start Rendering</a> <a href="javascript:Canworks.Renderer.stopRendering();">Stop Rendering</a> <span id="fps">0 fps</span> <span id="ms">0 ms</span></p>
+	
+	<script type="text/javascript">
+		
+		// faster namespace typing ;)
+		var CW = Canworks;
+		
+		CW.Renderer.setShowFPS(true, document.getElementById("fps"), document.getElementById("ms"));
+		CW.Renderer.setMaxFPS(1000);
+		CW.Renderer.setSublayerAlphaBlendingEnabled(false); // not good for UI, better performance
+		
+		var surface = new CW.Surface(document.body, new CW.Rect(0, 0, 1880, 860));
+		surface.getCanvasElement().style.backgroundColor = "grey";
+		
+		var BGLayer = new CW.Layer(new CW.Rect(0, 0, 1880, 860));
+		BGLayer.setOpaque(true);
+		surface.addSublayer(BGLayer);
+		
+		var BGImage = new Image();
+		BGImage.onload = function() {
+			var context = Canworks.getCurrentGraphicsContext(BGLayer);
+    		var pattern = context.createPattern(BGImage, 'no-repeat');
+    		BGLayer.setBackgroundColor(pattern);
+		};
+		BGImage.src = 'perf_bg.jpg';
+		
+		var size = 30;
+		
+		for(var i=0; i<40; i++) {
+			for(var j=0; j<10; j++) {
+				var layer = new CW.Layer(new CW.Rect((i*size) + 10, (j*size) + 10, size-10, size-10));
+				layer.setBackgroundColor("green");
+				layer.setAlpha(1.0);
+				BGLayer.addSublayer(layer);
+			}
+		}
+		
+		var BGImageSublayer = new Image();
+		BGImageSublayer.onload = function() {
+			var len = BGLayer.sublayers.length;
+			for(var i=0; i<len; i++) {
+				var sublayer = BGLayer.sublayers[i];
+				var context = Canworks.getCurrentGraphicsContext(sublayer);
+    			var pattern = context.createPattern(BGImageSublayer, 'no-repeat');
+    			sublayer.setBackgroundColor(pattern);
+			}
+		};
+		//BGImageSublayer.src = 'trans_test.png';
+		
+		var alpha = 1.0;
+		var position = 0.0;
+		var up = true;
+		
+		function animateLayers () {
+			var len = BGLayer.sublayers.length;
+			for(var i=0; i<len; i++) {
+				var sublayer = BGLayer.sublayers[i];
+				var r = Math.floor(Math.random()*256);
+				var g = Math.floor(Math.random()*256);
+				var b = Math.floor(Math.random()*256);
+				var bg = "rgb("+r+", "+g+", "+b+");"
+				var offsetX = Math.floor(Math.random()*10);
+				var offsetY = Math.floor(Math.random()*4);
+				sublayer.setAlpha(Math.floor(Math.random()*100)/100);
+				sublayer.setBackgroundColor(bg);
+				sublayer.setFrame(sublayer.frame.offsetRect(offsetX, offsetY));
+			}
+			animationTimerReference = setTimeout ( animateLayers, 1000/120 );
+		}
+		
+		var animationTimerReference = 0;
+		function startAnimation () {
+			animationTimerReference = setTimeout ( animateLayers, 1000/120 );
+		}
+		
+		function animateDirty () {
+			var len = BGLayer.sublayers.length;
+			for(var i=0; i<len; i++) {
+				var sublayer = BGLayer.sublayers[i];
+				sublayer.setDirty(true);
+			}
+			animationDirtyTimerReference = setTimeout ( "animateDirty()", 1000/120 );
+		}
+		
+		var animationDirtyTimerReference = 0;
+		function startDirtyAnimation () {
+			animationDirtyTimerReference = setTimeout ( "animateDirty()", 1000/120 );
+		}
+		
+		
+	</script>
+
+</body>
+</html>

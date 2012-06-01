@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-en"> 
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Canworks</title>
+	<script type="text/javascript" src="canworks/Canworks.js"></script>
+</head>
+<body>
+	
+	
+	
+	<p> <img src="canworks/canworks.png"> <a href="javascript:Canworks.Renderer.startRendering();">Start Rendering</a> <a href="javascript:Canworks.Renderer.stopRendering();">Stop Rendering</a> <span id="fps">0 fps</span> <span id="ms">0 ms</span></p>
+	
+	<p><a href="javascript:animate();">Animate</a></p>
+	
+	<script type="text/javascript">
+		
+		// faster namespace typing ;)
+		var CW = Canworks;
+		
+		CW.Renderer.setShowFPS(true, document.getElementById("fps"), document.getElementById("ms"));
+		CW.Renderer.setMaxFPS(1000);
+		CW.Renderer.setSublayerAlphaBlendingEnabled(false); // not good for UI, better performance
+		
+		var surface = new CW.Surface(document.body, new CW.Rect(0, 0, 800, 800));
+		surface.getCanvasElement().style.backgroundColor = "grey";
+		
+		var newLayer = new CW.Layer(new CW.Rect(100, 100, 100, 100));
+		newLayer.setBackgroundColor("red");
+		newLayer.setAlpha(0.0);
+		
+		surface.addSublayer(newLayer);
+		
+		var newLayer2 = new CW.Layer(new CW.Rect(150, 150, 134, 120));
+		newLayer2.setContentMode(Canworks.layerContentMode.redraw);
+		newLayer2.setBackgroundColor("rgb(0, 0, 255);");
+		newLayer2.setAlpha(0.1);
+		
+		surface.addSublayer(newLayer2);
+		
+		var newLayer3 = new CW.Layer(new CW.Rect(50, 400, 100, 100));
+		newLayer3.setBackgroundColor("yellow");
+		
+		surface.addSublayer(newLayer3);
+		
+		function animate () {
+			Canworks.Animations.begin("myAnimation",null);
+			Canworks.Animations.setDuration(500);
+			Canworks.Animations.setCurve(Canworks.Animations.Curves.EaseInOut);
+			Canworks.Animations.setDelay(1000);
+			Canworks.Animations.setReversesAfterEnd(true);
+			Canworks.Animations.setRepeatCount(4);
+			
+			Canworks.Animations.setOnBeginHandler(function(animation) { 
+				//console.log(animation.UID + " started");
+			});
+			
+			Canworks.Animations.setOnRestartHandler(function(animation) { 
+				//console.log(animation.UID + " restarting");
+			});
+			
+			Canworks.Animations.setOnEndHandler(function(animation) { 
+				//console.log(animation.UID + " finished");
+			});
+			
+			newLayer.setAlpha(1.0);
+			newLayer2.setAlpha(1.0);
+			newLayer2.setBackgroundColor("rgba(0, 255, 0, 1.0);");
+			newLayer2.setFrame(new Canworks.Rect(225, 225, 400, 250));
+			newLayer3.setFrame(new Canworks.Rect(75, 375, 50, 50));
+			
+			Canworks.Animations.commit();
+		}
+		
+		
+		
+	</script>
+
+</body>
+</html>
