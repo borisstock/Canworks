@@ -25,11 +25,13 @@ Games, Games, Games! … Games! (Not something like Crysis but 2.5D isometric so
 
 UI components which require a lot of custom drawing and animations which are not achievable with plain HTML and CSS
 
+
 Current state of development
+----------------------------
 
 Canworks is currently in an early alpha stage of development.
 
-Current rendering features:
+**Current rendering features:**
 
 Layer tree / scene graph
 
@@ -50,7 +52,7 @@ Layers with background-colors/-images and -gradients, shadows, borders and round
 Low level geometry calculation functions (rectangles, points)
 
 
-Interaction framwork features:
+**Interaction framwork features:**
 
 Basic layer interaction (mouse down, mouse up, mose move, drag, drop, over, out)
 
